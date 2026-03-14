@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
+import Link from "next/link";
 
 const DIETARY_MODES = ["maintain", "bulk", "cut", "vegetarian", "vegan", "keto"];
 const COMMON_ALLERGIES = ["Gluten", "Dairy", "Nuts", "Eggs", "Soy", "Shellfish"];
@@ -13,6 +14,7 @@ export default function Home() {
   const [allergies, setAllergies] = useState([]);
   const [step, setStep] = useState("upload");
   const [error, setError] = useState(null);
+  const [shareRecipe, setShareRecipe] = useState(false);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -69,6 +71,7 @@ export default function Home() {
         body: JSON.stringify({
           ingredients,
           profile: { dietary_mode: dietaryMode, allergies },
+          share: shareRecipe,
         }),
       });
       const data = await res.json();
@@ -499,6 +502,10 @@ export default function Home() {
             <div className="logo-icon">🧊</div>
             <span className="logo-name">Fridge<em>IQ</em></span>
           </div>
+          <div className="flex gap-4">
+            <Link href="/feed" className="text-blue-500 hover:underline">Browse shared recipes</Link>
+            <Link href="/create-recipe" className="text-green-500 hover:underline">Create custom recipe</Link>
+          </div>
           {step !== "upload" && (
             <button className="back-btn" onClick={reset}>← Start over</button>
           )}
@@ -590,6 +597,17 @@ export default function Home() {
               ))}
             </div>
             {error && <p className="error">{error}</p>}
+            <div className="mb-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={shareRecipe}
+                  onChange={(e) => setShareRecipe(e.target.checked)}
+                  className="rounded"
+                />
+                <span>Share this recipe with the community</span>
+              </label>
+            </div>
             <button className="btn-primary" onClick={generateRecipe}>Generate my recipe →</button>
           </div>
         )}
@@ -641,6 +659,12 @@ export default function Home() {
 
             {typeof recipe === "string" && <p className="recipe-raw">{recipe}</p>}
             {recipe.raw && <p className="recipe-raw">{recipe.raw}</p>}
+
+            {recipe.sharedId && (
+              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-800">✅ Recipe shared! <a href={`/shared/${recipe.sharedId}`} className="underline">View shared recipe</a></p>
+              </div>
+            )}
 
             <button className="btn-primary" onClick={reset}>🔄 Scan another fridge</button>
             <button className="btn-ghost" onClick={reset}>Start over</button>
