@@ -15,7 +15,6 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef(null);
-  const cameraInputRef = useRef(null);
 
   const handleImage = (file) => {
     if (!file) return;
@@ -105,7 +104,6 @@ export default function Home() {
           min-height: 100vh;
         }
 
-        /* ── BACKGROUND ── */
         .bg-layer {
           position: fixed;
           inset: 0;
@@ -146,7 +144,6 @@ export default function Home() {
           background-size: 160px;
         }
 
-        /* ── LAYOUT ── */
         .page {
           position: relative;
           z-index: 2;
@@ -155,7 +152,6 @@ export default function Home() {
           padding: 0 48px 100px;
         }
 
-        /* ── HEADER ── */
         header {
           display: flex;
           align-items: center;
@@ -199,7 +195,6 @@ export default function Home() {
         }
         .back-btn:hover { background: rgba(238,234,227,0.1); color: #eeeae3; }
 
-        /* ── HERO ── */
         .hero { margin-bottom: 52px; }
 
         .hero h1 {
@@ -224,7 +219,6 @@ export default function Home() {
           letter-spacing: -0.2px;
         }
 
-        /* ── DROP ZONE ── */
         .dropzone {
           border: 1.5px dashed rgba(238,234,227,0.13);
           border-radius: 24px;
@@ -296,36 +290,32 @@ export default function Home() {
           border-radius: 100px;
           font-size: 13px;
           color: #4ade80;
-          letter-spacing: 0.01em;
         }
 
-        /* ── BUTTON ROW ── */
-        .btn-row { display: flex; gap: 12px; margin-bottom: 48px; }
-
-        .btn-secondary {
-          flex: 1;
+        .btn-upload {
+          width: 100%;
           padding: 14px;
           border-radius: 16px;
           border: 1px solid rgba(238,234,227,0.1);
           background: rgba(238,234,227,0.03);
           color: rgba(238,234,227,0.55);
-          font-size: 14px;
+          font-size: 15px;
           font-family: 'DM Sans', sans-serif;
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
+          gap: 10px;
+          margin-bottom: 40px;
           letter-spacing: -0.1px;
         }
-        .btn-secondary:hover {
+        .btn-upload:hover {
           background: rgba(238,234,227,0.07);
           border-color: rgba(238,234,227,0.18);
           color: #eeeae3;
         }
 
-        /* ── SECTION ── */
         .section { margin-bottom: 40px; }
 
         .section-label {
@@ -353,19 +343,9 @@ export default function Home() {
           letter-spacing: -0.1px;
         }
         .pill:hover { border-color: rgba(238,234,227,0.28); color: rgba(238,234,227,0.85); }
-        .pill.active-diet {
-          background: #eeeae3;
-          color: #060608;
-          border-color: #eeeae3;
-          font-weight: 500;
-        }
-        .pill.active-allergy {
-          background: rgba(239,68,68,0.12);
-          border-color: rgba(239,68,68,0.35);
-          color: #fca5a5;
-        }
+        .pill.active-diet { background: #eeeae3; color: #060608; border-color: #eeeae3; font-weight: 500; }
+        .pill.active-allergy { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.35); color: #fca5a5; }
 
-        /* ── PRIMARY BUTTON ── */
         .btn-primary {
           width: 100%;
           padding: 20px;
@@ -383,7 +363,6 @@ export default function Home() {
           position: relative;
           overflow: hidden;
         }
-
         .btn-primary::after {
           content: '';
           position: absolute;
@@ -391,20 +370,10 @@ export default function Home() {
           background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
           pointer-events: none;
         }
-
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 40px rgba(74,222,128,0.4), 0 1px 0 rgba(255,255,255,0.1) inset;
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(74,222,128,0.4), 0 1px 0 rgba(255,255,255,0.1) inset; }
         .btn-primary:active { transform: translateY(0); }
-        .btn-primary:disabled {
-          opacity: 0.2;
-          cursor: not-allowed;
-          transform: none;
-          box-shadow: none;
-        }
+        .btn-primary:disabled { opacity: 0.2; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* ── ERROR ── */
         .error {
           color: #fca5a5;
           font-size: 13px;
@@ -416,7 +385,6 @@ export default function Home() {
           border-radius: 12px;
         }
 
-        /* ── LOADING ── */
         .loading-screen {
           display: flex;
           flex-direction: column;
@@ -446,28 +414,11 @@ export default function Home() {
           50% { transform: scale(1.06); box-shadow: 0 0 60px rgba(74,222,128,0.2); }
         }
 
-        .loading-screen h2 {
-          font-family: 'Instrument Serif', serif;
-          font-size: 32px;
-          letter-spacing: -0.8px;
-        }
-
+        .loading-screen h2 { font-family: 'Instrument Serif', serif; font-size: 32px; letter-spacing: -0.8px; }
         .loading-screen p { color: rgba(238,234,227,0.3); font-size: 15px; }
 
-        .progress-track {
-          width: 180px;
-          height: 2px;
-          background: rgba(238,234,227,0.07);
-          border-radius: 2px;
-          overflow: hidden;
-        }
-
-        .progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, #4ade80, #86efac);
-          border-radius: 2px;
-          animation: slide 2.2s ease-in-out infinite;
-        }
+        .progress-track { width: 180px; height: 2px; background: rgba(238,234,227,0.07); border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4ade80, #86efac); border-radius: 2px; animation: slide 2.2s ease-in-out infinite; }
 
         @keyframes slide {
           0% { width: 5%; margin-left: 0; }
@@ -475,13 +426,7 @@ export default function Home() {
           100% { width: 5%; margin-left: 95%; }
         }
 
-        /* ── INGREDIENTS ── */
-        .ingredients-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 10px;
-          margin-bottom: 40px;
-        }
+        .ingredients-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 40px; }
 
         .ingredient-card {
           display: flex;
@@ -499,22 +444,9 @@ export default function Home() {
           to { opacity: 1; transform: translateY(0); }
         }
 
-        .ing-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #4ade80;
-          flex-shrink: 0;
-          box-shadow: 0 0 8px rgba(74,222,128,0.5);
-        }
+        .ing-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+        .ingredient-card span { font-size: 13px; color: rgba(238,234,227,0.7); text-transform: capitalize; }
 
-        .ingredient-card span {
-          font-size: 13px;
-          color: rgba(238,234,227,0.7);
-          text-transform: capitalize;
-        }
-
-        /* ── RECIPE ── */
         .recipe-eyebrow {
           font-size: 11px;
           font-weight: 600;
@@ -526,100 +458,27 @@ export default function Home() {
           align-items: center;
           gap: 8px;
         }
+        .recipe-eyebrow::after { content: ''; flex: 1; height: 1px; background: rgba(74,222,128,0.2); }
 
-        .recipe-eyebrow::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: rgba(74,222,128,0.2);
-        }
+        .recipe-title { font-family: 'Instrument Serif', serif; font-size: clamp(36px, 5vw, 56px); letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 12px; }
+        .recipe-desc { color: rgba(238,234,227,0.4); font-size: 16px; font-weight: 300; margin-bottom: 48px; line-height: 1.6; }
 
-        .recipe-title {
-          font-family: 'Instrument Serif', serif;
-          font-size: clamp(36px, 5vw, 56px);
-          letter-spacing: -1.5px;
-          line-height: 1.05;
-          margin-bottom: 12px;
-          color: #eeeae3;
-        }
-
-        .recipe-desc {
-          color: rgba(238,234,227,0.4);
-          font-size: 16px;
-          font-weight: 300;
-          margin-bottom: 48px;
-          line-height: 1.6;
-        }
-
-        .recipe-cols {
-          display: grid;
-          grid-template-columns: 1fr 2fr;
-          gap: 48px;
-          margin-bottom: 40px;
-        }
-
-        .recipe-section-label {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.14em;
-          color: rgba(238,234,227,0.28);
-          text-transform: uppercase;
-          margin-bottom: 16px;
-        }
+        .recipe-cols { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; margin-bottom: 40px; }
+        .recipe-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; color: rgba(238,234,227,0.28); text-transform: uppercase; margin-bottom: 16px; }
 
         .ing-list { list-style: none; }
-        .ing-list li {
-          display: flex;
-          gap: 10px;
-          padding: 9px 0;
-          border-bottom: 1px solid rgba(238,234,227,0.05);
-          font-size: 14px;
-          color: rgba(238,234,227,0.7);
-          line-height: 1.5;
-        }
+        .ing-list li { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(238,234,227,0.05); font-size: 14px; color: rgba(238,234,227,0.7); line-height: 1.5; }
         .ing-list li:last-child { border-bottom: none; }
         .ing-dash { color: rgba(238,234,227,0.15); flex-shrink: 0; }
 
         .steps-list { list-style: none; }
-        .step-item {
-          display: flex;
-          gap: 20px;
-          margin-bottom: 24px;
-          animation: fadeUp 0.4s ease both;
-        }
-        .step-num {
-          font-family: 'Instrument Serif', serif;
-          font-size: 22px;
-          color: rgba(238,234,227,0.12);
-          min-width: 32px;
-          line-height: 1.4;
-        }
-        .step-text {
-          font-size: 14px;
-          color: rgba(238,234,227,0.7);
-          line-height: 1.75;
-        }
+        .step-item { display: flex; gap: 20px; margin-bottom: 24px; animation: fadeUp 0.4s ease both; }
+        .step-num { font-family: 'Instrument Serif', serif; font-size: 22px; color: rgba(238,234,227,0.12); min-width: 32px; line-height: 1.4; }
+        .step-text { font-size: 14px; color: rgba(238,234,227,0.7); line-height: 1.75; }
 
-        .recipe-raw {
-          font-size: 14px;
-          color: rgba(238,234,227,0.65);
-          line-height: 1.85;
-          white-space: pre-wrap;
-        }
+        .recipe-raw { font-size: 14px; color: rgba(238,234,227,0.65); line-height: 1.85; white-space: pre-wrap; }
 
-        .btn-ghost {
-          width: 100%;
-          padding: 17px;
-          border-radius: 16px;
-          border: 1px solid rgba(238,234,227,0.09);
-          background: transparent;
-          color: rgba(238,234,227,0.35);
-          font-size: 15px;
-          font-family: 'DM Sans', sans-serif;
-          cursor: pointer;
-          transition: all 0.2s;
-          margin-top: 12px;
-        }
+        .btn-ghost { width: 100%; padding: 17px; border-radius: 16px; border: 1px solid rgba(238,234,227,0.09); background: transparent; color: rgba(238,234,227,0.35); font-size: 15px; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
         .btn-ghost:hover { background: rgba(238,234,227,0.05); color: rgba(238,234,227,0.65); }
 
         input[type="file"] { display: none; }
@@ -645,12 +504,11 @@ export default function Home() {
           )}
         </header>
 
-        {/* ── UPLOAD ── */}
         {step === "upload" && (
           <div>
             <div className="hero">
               <h1>What's in your<br /><em>fridge?</em></h1>
-              <p>Snap a photo — we'll figure out the recipe.</p>
+              <p>Upload a photo — we'll figure out the recipe.</p>
             </div>
 
             <div
@@ -671,18 +529,16 @@ export default function Home() {
                 <div className="dropzone-inner">
                   <div className="dz-icon">📷</div>
                   <p className="dz-title">Drop your fridge photo here</p>
-                  <p className="dz-sub">or use the buttons below</p>
+                  <p className="dz-sub">or use the button below</p>
                 </div>
               )}
             </div>
 
             <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => handleImage(e.target.files[0])} />
-            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={(e) => handleImage(e.target.files[0])} />
 
-            <div className="btn-row">
-              <button className="btn-secondary" onClick={() => fileInputRef.current.click()}>📁 Upload photo</button>
-              <button className="btn-secondary" onClick={() => cameraInputRef.current.click()}>📸 Take photo</button>
-            </div>
+            <button className="btn-upload" onClick={() => fileInputRef.current.click()}>
+              📁 Upload photo
+            </button>
 
             <div className="section">
               <p className="section-label">Dietary goal</p>
@@ -710,7 +566,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── SCANNING ── */}
         {step === "scanning" && (
           <div className="loading-screen">
             <div className="spinner">🔍</div>
@@ -720,7 +575,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── INGREDIENTS ── */}
         {step === "ingredients" && (
           <div>
             <div className="hero">
@@ -740,7 +594,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── GENERATING ── */}
         {step === "generating" && (
           <div className="loading-screen">
             <div className="spinner">👨‍🍳</div>
@@ -750,7 +603,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── RECIPE ── */}
         {step === "recipe" && recipe && (
           <div>
             <p className="recipe-eyebrow">✦ Your recipe</p>
