@@ -16,6 +16,8 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [shareRecipe, setShareRecipe] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [manualInput, setManualInput] = useState("");
+  const [manualIngredients, setManualIngredients] = useState([]);
   const fileInputRef = useRef(null);
 
   const handleImage = (file) => {
@@ -40,20 +42,33 @@ export default function Home() {
     if (file && file.type.startsWith("image/")) handleImage(file);
   }, []);
 
+  const addManualIngredient = () => {
+    if (manualInput.trim()) {
+      setManualIngredients([...manualIngredients, { name: manualInput.trim(), quantity: "1", unit: "" }]);
+      setManualInput("");
+    }
+  };
+
   const scanFridge = async () => {
-    if (!image) return;
+    if (!image && manualIngredients.length === 0) return;
     setStep("scanning");
     setError(null);
     try {
-      const base64 = await toBase64(image);
-      const res = await fetch("/api/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Scan failed");
-      setIngredients(data.ingredients || []);
+      let scanned = [];
+      if (image) {
+        const base64 = await toBase64(image);
+        const res = await fetch("/api/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Scan failed");
+        scanned = data.ingredients || [];
+      }
+      const allNames = scanned.map((i) => (typeof i === "string" ? i : i.name).toLowerCase());
+      const extras = manualIngredients.filter((i) => !allNames.includes(i.name.toLowerCase()));
+      setIngredients([...scanned, ...extras]);
       setStep("ingredients");
     } catch (e) {
       setError(e.message);
@@ -91,6 +106,8 @@ export default function Home() {
     setRecipe(null);
     setStep("upload");
     setError(null);
+    setManualInput("");
+    setManualIngredients([]);
   };
 
   return (
@@ -310,7 +327,7 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           gap: 10px;
-          margin-bottom: 40px;
+          margin-bottom: 24px;
           letter-spacing: -0.1px;
         }
         .btn-upload:hover {
@@ -318,6 +335,76 @@ export default function Home() {
           border-color: rgba(238,234,227,0.18);
           color: #eeeae3;
         }
+
+        .manual-input-row {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+
+        .manual-input {
+          flex: 1;
+          background: rgba(238,234,227,0.04);
+          border: 1px solid rgba(238,234,227,0.13);
+          border-radius: 14px;
+          padding: 14px 18px;
+          color: #eeeae3;
+          font-size: 15px;
+          font-family: 'DM Sans', sans-serif;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        .manual-input::placeholder { color: rgba(238,234,227,0.2); }
+        .manual-input:focus { border-color: rgba(74,222,128,0.4); }
+
+        .btn-add {
+          padding: 14px 24px;
+          border-radius: 14px;
+          background: rgba(74,222,128,0.12);
+          border: 1px solid rgba(74,222,128,0.25);
+          color: #4ade80;
+          font-size: 15px;
+          font-family: 'DM Sans', sans-serif;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .btn-add:hover { background: rgba(74,222,128,0.2); border-color: rgba(74,222,128,0.45); }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 40px; }
+
+        .chip {
+          background: rgba(74,222,128,0.08);
+          border: 1px solid rgba(74,222,128,0.25);
+          border-radius: 100px;
+          padding: 7px 14px;
+          font-size: 13px;
+          color: #4ade80;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .chip-remove {
+          background: none;
+          border: none;
+          color: rgba(74,222,128,0.6);
+          cursor: pointer;
+          font-size: 14px;
+          padding: 0;
+          line-height: 1;
+          transition: color 0.15s;
+        }
+        .chip-remove:hover { color: #4ade80; }
+
+        .divider {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+        .divider-line { flex: 1; height: 1px; background: rgba(238,234,227,0.07); }
+        .divider-text { font-size: 12px; color: rgba(238,234,227,0.2); letter-spacing: 0.08em; text-transform: uppercase; }
 
         .section { margin-bottom: 40px; }
 
@@ -515,9 +602,10 @@ export default function Home() {
           <div>
             <div className="hero">
               <h1>What's in your<br /><em>fridge?</em></h1>
-              <p>Upload a photo — we'll figure out the recipe.</p>
+              <p>Scan a photo, type your ingredients, or both.</p>
             </div>
 
+            {/* Photo upload */}
             <div
               className={`dropzone${dragging ? " drag" : ""}`}
               onClick={() => !imagePreview && fileInputRef.current.click()}
@@ -529,19 +617,19 @@ export default function Home() {
                 <>
                   <img src={imagePreview} alt="Fridge" className="preview-img" />
                   <div className="preview-overlay">
-  <span className="preview-badge">✓ Photo ready — click Scan to continue</span>
-  <button
-    onClick={(e) => { e.stopPropagation(); setImage(null); setImagePreview(null); }}
-    style={{
-      position: "absolute", top: 12, right: 12,
-      background: "rgba(6,6,8,0.75)", border: "1px solid rgba(238,234,227,0.15)",
-      color: "rgba(238,234,227,0.7)", borderRadius: "100px",
-      padding: "6px 14px", fontSize: "13px", cursor: "pointer"
-    }}
-  >
-    ✕ Remove
-  </button>
-</div>
+                    <span className="preview-badge">✓ Photo ready</span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setImage(null); setImagePreview(null); }}
+                      style={{
+                        position: "absolute", top: 12, right: 12,
+                        background: "rgba(6,6,8,0.75)", border: "1px solid rgba(238,234,227,0.15)",
+                        color: "rgba(238,234,227,0.7)", borderRadius: "100px",
+                        padding: "6px 14px", fontSize: "13px", cursor: "pointer"
+                      }}
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
                 </>
               ) : (
                 <div className="dropzone-inner">
@@ -558,6 +646,44 @@ export default function Home() {
               📁 Upload photo
             </button>
 
+            {/* Divider */}
+            <div className="divider">
+              <div className="divider-line" />
+              <span className="divider-text">or add ingredients manually</span>
+              <div className="divider-line" />
+            </div>
+
+            {/* Manual ingredient input */}
+            <div className="manual-input-row">
+              <input
+                className="manual-input"
+                type="text"
+                value={manualInput}
+                onChange={(e) => setManualInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") addManualIngredient(); }}
+                placeholder="e.g. eggs, milk, leftover chicken..."
+              />
+              <button className="btn-add" onClick={addManualIngredient}>+ Add</button>
+            </div>
+
+            {/* Ingredient chips */}
+            {manualIngredients.length > 0 && (
+              <div className="chips">
+                {manualIngredients.map((ing, i) => (
+                  <span className="chip" key={i}>
+                    {ing.name}
+                    <button
+                      className="chip-remove"
+                      onClick={() => setManualIngredients(manualIngredients.filter((_, j) => j !== i))}
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Dietary + allergy options */}
             <div className="section">
               <p className="section-label">Dietary goal</p>
               <div className="pills">
@@ -578,8 +704,12 @@ export default function Home() {
 
             {error && <p className="error">{error}</p>}
 
-            <button className="btn-primary" onClick={scanFridge} disabled={!image}>
-              Scan my fridge →
+            <button
+              className="btn-primary"
+              onClick={scanFridge}
+              disabled={!image && manualIngredients.length === 0}
+            >
+              {image ? "Scan my fridge →" : "Use my ingredients →"}
             </button>
           </div>
         )}
@@ -646,7 +776,7 @@ export default function Home() {
                     {recipe.ingredients.map((ing, i) => (
                       <li key={i}>
                         <span className="ing-dash">—</span>
-                        {typeof ing === "string" ? ing : `${ing.amount ?? ""} ${ing.unit ?? ""} ${ing.name ?? ing}`.trim()}
+                        {typeof ing === "string" ? ing : `${ing.quantity && ing.unit && ing.unit !== "pieces" ? `${ing.quantity} ${ing.unit} ` : ing.quantity && ing.unit !== "pieces" ? `${ing.quantity} ` : ""}${ing.name ?? ing}`.trim()}
                       </li>
                     ))}
                   </ul>
