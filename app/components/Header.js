@@ -57,12 +57,10 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           padding: 20px 32px;
-          background: rgba(6, 6, 8, 0.8);
           position: sticky;
           top: 0;
           z-index: 50;
           backdrop-filter: blur(18px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .logo {

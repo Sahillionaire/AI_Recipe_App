@@ -435,10 +435,6 @@ export default function Home() {
             <div className="logo-icon">🧊</div>
             <span className="logo-name">Fridge<em>IQ</em></span>
           </div>
-          <div className="flex gap-4">
-            <Link href="/feed" className="text-blue-500 hover:underline">Browse shared recipes</Link>
-            <Link href="/create-recipe" className="text-green-500 hover:underline">Create custom recipe</Link>
-          </div>
           {step !== "upload" && (
             <button className="back-btn" onClick={reset}>← Start over</button>
           )}
