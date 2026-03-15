@@ -2,6 +2,8 @@
 
 An AI-powered recipe generator with community sharing. Take a photo of your fridge, and the app identifies your ingredients and generates a personalised recipe based on your dietary preferences. Share your creations with the community!
 
+https://ai-recipe-app-livid.vercel.app/ - access the website!
+
 ## How it works
 
 1. User takes a photo of their fridge
@@ -13,7 +15,7 @@ An AI-powered recipe generator with community sharing. Take a photo of your frid
 ## Features
 
 - **AI Ingredient Detection** - Upload fridge photos to automatically identify ingredients
-- **Personalized Recipes** - Generate recipes based on dietary preferences and allergies
+- **Personalised Recipes** - Generate recipes based on dietary preferences and allergies
 - **Community Sharing** - Share recipes anonymously with the community
 - **Recipe Ratings** - Rate and review shared recipes
 - **Public Feed** - Browse recipes shared by other users
