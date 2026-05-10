@@ -189,5 +189,5 @@ const recipes = await feedResponse.json()
 | Name | Role |
 |------|------|
 | Arnob | Backend recipe generation |
-| | Backend image scanning |
+| Sahil | Backend image scanning |
 | | Frontend |
